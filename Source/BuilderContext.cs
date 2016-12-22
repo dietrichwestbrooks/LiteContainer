@@ -1,15 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-<<<<<<< HEAD
 namespace Wayne.Payment.Platform.Lite
 {
     internal sealed class BuilderContext : IBuilderContext
-=======
-namespace Wayne.Payment.Platform
-{
-    internal class BuilderContext : IBuilderContext
->>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
     {
         public BuilderContext(LiteContainer container, BuildKey key, IList<IBuilderPolicy> policies, LifetimeContainer lifetime)
         {

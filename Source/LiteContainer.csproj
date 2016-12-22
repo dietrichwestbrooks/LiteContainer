@@ -7,11 +7,7 @@
     <ProjectGuid>{B118ADAF-9C42-4767-9B66-83D76E1645C7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-<<<<<<< HEAD
     <RootNamespace>Wayne.Payment.Platform.Lite</RootNamespace>
-=======
-    <RootNamespace>Wayne.Payment.Platform</RootNamespace>
->>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
     <AssemblyName>LiteContainer</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>WindowsCE</PlatformFamilyName>
@@ -69,11 +65,8 @@
   <ItemGroup>
     <Compile Include="Builder.cs" />
     <Compile Include="BuilderContext.cs" />
-<<<<<<< HEAD
     <Compile Include="OrderedParameters.cs" />
     <Compile Include="OrderedParametersPolicy.cs" />
-=======
->>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
     <Compile Include="PerThreadLifetimePolicy.cs" />
     <Compile Include="ResolveParameters.cs" />
     <Compile Include="ResolveParameterExtensions.cs" />

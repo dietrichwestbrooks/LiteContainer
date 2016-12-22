@@ -2,15 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 
-<<<<<<< HEAD
 namespace Wayne.Payment.Platform.Lite
 {
     public sealed class PerThreadLifetimePolicy : ILifetimePolicy
-=======
-namespace Wayne.Payment.Platform
-{
-    public class PerThreadLifetimePolicy : ILifetimePolicy
->>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
     {
         private const string DataSlotName = "Lifetime";
         private Guid _key;

@@ -1,15 +1,6 @@
-<<<<<<< HEAD
 ﻿namespace Wayne.Payment.Platform.Lite
 {
     //internal sealed class Builder
-=======
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Wayne.Payment.Platform
-{
-    //internal class Builder
->>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
     //{
     //    private ILiteContainer _container;
 

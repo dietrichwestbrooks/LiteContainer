@@ -1,14 +1,8 @@
 ﻿using System;
-<<<<<<< HEAD
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Wayne.Payment.Platform.Lite
-=======
-using System.Linq;
-
-namespace Wayne.Payment.Platform
->>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
 {
     internal class FactoryFunctionPolicy : IFactoryPolicy
     {
@@ -28,7 +22,6 @@ namespace Wayne.Payment.Platform
 
             var method = factory.GetType().GetMethod("Invoke");
 
-<<<<<<< HEAD
             var parameters = new List<object>();
 
             var parameter = method.GetParameters().FirstOrDefault();
@@ -51,9 +44,6 @@ namespace Wayne.Payment.Platform
                         parameter.ParameterType.Name));
                 }
             }
-=======
-            var parameters = method.GetParameters().Select(p => ResolveParameterExtensions.Resolve(context, p));
->>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
 
             return method.Invoke(factory, parameters.ToArray());
         }

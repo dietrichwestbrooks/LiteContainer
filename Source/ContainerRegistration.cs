@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-<<<<<<< HEAD
 namespace Wayne.Payment.Platform.Lite
 {
     public sealed class ContainerRegistration
@@ -11,15 +10,6 @@ namespace Wayne.Payment.Platform.Lite
         private LiteContainer _container;
         private BuildKey _key;
         private IList<IBuilderPolicy> _policies;
-=======
-namespace Wayne.Payment.Platform
-{
-    public class ContainerRegistration
-    {
-        private LiteContainer _container;
-        private BuildKey _key;
-        private readonly IList<IBuilderPolicy> _policies;
->>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
         private Dictionary<Type, ContainerRegistration> _registrations;
 
         internal ContainerRegistration(LiteContainer container, BuildKey key, IList<IBuilderPolicy> policies)
@@ -35,7 +25,6 @@ namespace Wayne.Payment.Platform
             get { return _registrations; }
         }
 
-<<<<<<< HEAD
         public Type ServiceType
         {
             get { return _key.Type; }
@@ -46,8 +35,6 @@ namespace Wayne.Payment.Platform
             get { return _key.Name; }
         }
 
-=======
->>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
         public ContainerRegistration As<TService>()
         {
             var serviceType = typeof (TService);
