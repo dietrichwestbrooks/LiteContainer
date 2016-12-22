@@ -1,0 +1,127 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B118ADAF-9C42-4767-9B66-83D76E1645C7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Wayne.Payment.Platform.Lite</RootNamespace>
+    <AssemblyName>LiteContainer</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <OSVersion>5.0</OSVersion>
+    <DeployDirSuffix>IXPayMain</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows CE</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <DeployDirPrefix>\Flash</DeployDirPrefix>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation.CF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Library\Microsoft\Microsoft.Practices.ServiceLocation.CF.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Builder.cs" />
+    <Compile Include="BuilderContext.cs" />
+    <Compile Include="OrderedParameters.cs" />
+    <Compile Include="OrderedParametersPolicy.cs" />
+    <Compile Include="PerThreadLifetimePolicy.cs" />
+    <Compile Include="ResolveParameters.cs" />
+    <Compile Include="ResolveParameterExtensions.cs" />
+    <Compile Include="BuildKey.cs" />
+    <Compile Include="DefaultBuildPlanPolicy.cs" />
+    <Compile Include="DefaultConstructorPolicy.cs" />
+    <Compile Include="TypedParameter.cs" />
+    <Compile Include="TypedParameterPolicy.cs" />
+    <Compile Include="ExternalLifetimePolicy.cs" />
+    <Compile Include="FactoryBuildPlanPolicy.cs" />
+    <Compile Include="FactoryFunctionPolicy.cs" />
+    <Compile Include="IBuilderContext.cs" />
+    <Compile Include="IBuilderPolicy.cs" />
+    <Compile Include="IBuilderStage.cs" />
+    <Compile Include="IBuildPlanPolicy.cs" />
+    <Compile Include="IConstructorPolicy.cs" />
+    <Compile Include="IResolveParameterPolicy.cs" />
+    <Compile Include="IFactoryPolicy.cs" />
+    <Compile Include="IInjectionPolicy.cs" />
+    <Compile Include="ILifetimeContainer.cs" />
+    <Compile Include="ILifetimePolicy.cs" />
+    <Compile Include="ILiteContainer.cs" />
+    <Compile Include="BuildType.cs" />
+    <Compile Include="INamedPolicy.cs" />
+    <Compile Include="InjectionConstructorPolicy.cs" />
+    <Compile Include="InjectionParameterValue.cs" />
+    <Compile Include="IBuildTypePolicy.cs" />
+    <Compile Include="InjectionPropertyNamePolicy.cs" />
+    <Compile Include="InjectionPropertyTypePolicy.cs" />
+    <Compile Include="LifetimeContainer.cs" />
+    <Compile Include="LiteContainer.cs" />
+    <Compile Include="NamedPolicy.cs" />
+    <Compile Include="NamedParameterPolicy.cs" />
+    <Compile Include="NamedParameter.cs" />
+    <Compile Include="PolicyListExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ContainerRegistration.cs" />
+    <Compile Include="ResolveBuildPlanPolicy.cs" />
+    <Compile Include="ResolveParameter.cs" />
+    <Compile Include="SingletonLifetimePolicy.cs" />
+    <Compile Include="TransientLifetimePolicy.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
