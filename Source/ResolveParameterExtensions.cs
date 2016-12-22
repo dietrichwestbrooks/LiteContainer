@@ -2,7 +2,11 @@
 using System.Linq;
 using System.Reflection;
 
+<<<<<<< HEAD
 namespace Wayne.Payment.Platform.Lite
+=======
+namespace Wayne.Payment.Platform
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
 {
     internal static class ResolveParameterExtensions
     {
@@ -11,6 +15,12 @@ namespace Wayne.Payment.Platform.Lite
             var type = parameter.ParameterType;
             var name = parameter.Name;
 
+<<<<<<< HEAD
+=======
+            if (type == typeof (ResolveParameters))
+                return new ResolveParameters(context);
+
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
             var resolveParameters = context.Policies.OfType<IResolveParameterPolicy>().ToArray();
 
             foreach (var resolveParameter in resolveParameters.OfType<NamedParameterPolicy>())

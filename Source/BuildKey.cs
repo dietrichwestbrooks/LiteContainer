@@ -1,8 +1,14 @@
 ﻿using System;
 
+<<<<<<< HEAD
 namespace Wayne.Payment.Platform.Lite
 {
     internal sealed class BuildKey
+=======
+namespace Wayne.Payment.Platform
+{
+    internal class BuildKey
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
     {
         public BuildKey(Type type)
         {

@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Practices.ServiceLocation;
 
+<<<<<<< HEAD
 namespace Wayne.Payment.Platform.Lite
 {
     public sealed class LiteContainer : ILiteContainer
+=======
+namespace Wayne.Payment.Platform
+{
+    public class LiteContainer : ILiteContainer
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
     {
         private bool _disposed;
         private object _syncRoot = new object();
@@ -49,16 +55,27 @@ namespace Wayne.Payment.Platform.Lite
             return Register(service.GetType(), name, new SingletonLifetimePolicy(service));
         }
 
+<<<<<<< HEAD
         public ContainerRegistration Register<TService>(Func<TService> factory)
+=======
+        public ContainerRegistration Register(Delegate factory)
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
         {
             if (factory == null)
                 throw new ArgumentNullException("factory");
 
+<<<<<<< HEAD
             return Register(factory.GetType(), string.Empty, new SingletonLifetimePolicy(factory))
                 .As<TService>();
         }
 
         public ContainerRegistration Register<TService>(Func<TService> factory, string name)
+=======
+            return Register(factory.GetType(), string.Empty, new SingletonLifetimePolicy(factory));
+        }
+
+        public ContainerRegistration Register(Delegate factory, string name)
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
         {
             if (factory == null)
                 throw new ArgumentNullException("factory");
@@ -66,6 +83,7 @@ namespace Wayne.Payment.Platform.Lite
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
 
+<<<<<<< HEAD
             return Register(factory.GetType(), name, new SingletonLifetimePolicy(factory))
                 .As<TService>();
         }
@@ -89,6 +107,9 @@ namespace Wayne.Payment.Platform.Lite
 
             return Register(factory.GetType(), name, new SingletonLifetimePolicy(factory))
                 .As<TService>();
+=======
+            return Register(factory.GetType(), name, new SingletonLifetimePolicy(factory));
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
         }
 
         public ContainerRegistration Register<TService>(Func<ResolveParameters, TService> factory)
@@ -96,8 +117,12 @@ namespace Wayne.Payment.Platform.Lite
             if (factory == null)
                 throw new ArgumentNullException("factory");
 
+<<<<<<< HEAD
             return Register(factory.GetType(), string.Empty, new SingletonLifetimePolicy(factory))
                 .As<TService>();
+=======
+            return Register(factory.GetType(), string.Empty, new SingletonLifetimePolicy(factory));
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
         }
 
         public ContainerRegistration Register<TService>(Func<ResolveParameters, TService> factory, string name)
@@ -108,8 +133,12 @@ namespace Wayne.Payment.Platform.Lite
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
 
+<<<<<<< HEAD
             return Register(factory.GetType(), name, new SingletonLifetimePolicy(factory))
                 .As<TService>();
+=======
+            return Register(factory.GetType(), name, new SingletonLifetimePolicy(factory));
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
         }
 
         public ContainerRegistration Register(Type implementationType)

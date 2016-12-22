@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+<<<<<<< HEAD
 namespace Wayne.Payment.Platform.Lite
+=======
+namespace Wayne.Payment.Platform
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
 {
     public interface ILiteContainer : IDisposable
     {
@@ -9,6 +13,7 @@ namespace Wayne.Payment.Platform.Lite
 
         ContainerRegistration Register(object service, string name);
 
+<<<<<<< HEAD
         ContainerRegistration Register<TService>(Func<TService> factory);
 
         ContainerRegistration Register<TService>(Func<TService> factory, string name);
@@ -16,6 +21,11 @@ namespace Wayne.Payment.Platform.Lite
         ContainerRegistration Register<TService>(Func<object[], TService> factory);
 
         ContainerRegistration Register<TService>(Func<object[], TService> factory, string name);
+=======
+        ContainerRegistration Register(Delegate factory);
+
+        ContainerRegistration Register(Delegate factory, string name);
+>>>>>>> 06f38426eb2a120e3f5be0a79f2c3cf88f9ff4e4
 
         ContainerRegistration Register<TService>(Func<ResolveParameters, TService> factory);
 
