@@ -1,4 +1,4 @@
-﻿namespace Wayne.Payment.Platform.Lite
+﻿namespace LiteContainer
 {
     internal class NamedParameterPolicy : IResolveParameterPolicy
     {

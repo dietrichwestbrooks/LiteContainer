@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     internal sealed class LifetimeContainer : ILifetimeContainer, IDisposable
     {

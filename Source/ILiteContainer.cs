@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     public interface ILiteContainer : IDisposable
     {

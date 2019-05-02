@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     internal sealed class DefaultConstructorPolicy : IConstructorPolicy
     {

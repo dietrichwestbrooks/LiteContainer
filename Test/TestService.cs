@@ -8,14 +8,20 @@ namespace LiteContainer.Test
         ITestParameter Parameter { get; }
     }
 
-    public class TestService : ITestService
+    public class TestService : ITestService, IDisposable
     {
+        public bool IsDisposed { get; private set; }
         public int Value { get; private set; }
         public ITestParameter Parameter { get; private set; }
 
         public TestService()
         {
-            
+
+        }
+
+        public TestService(int value)
+        {
+            Value = value;
         }
 
         public TestService(ITestParameter parameter)
@@ -33,25 +39,53 @@ namespace LiteContainer.Test
         }
 
         public ITestProperty TestProperty { get; private set; }
+
+        public ITestProperty TestProperty2 { get; private set; }
+
+        public void Dispose()
+        {
+            IsDisposed = true;
+        }
     }
 
-    public interface ITestParameter
+    public interface ITestParameterValue
     {
         int Value { get; }
     }
 
+    public interface ITestParameterName
+    {
+        string Name { get; }
+    }
+
+    public interface ITestParameter : ITestParameterName, ITestParameterValue
+    {
+    }
+
     public class TestParameter : ITestParameter
     {
+        public string Name { get; set; }
         public int Value { get; private set; }
 
         public TestParameter()
-            : this(0)
+            : this("Unnamed", 0)
         {
             
         }
 
         public TestParameter(int value)
+            : this("Unnamed", value)
         {
+        }
+
+        public TestParameter(string name)
+            : this(name, 0)
+        {
+        }
+
+        public TestParameter(string name, int value)
+        {
+            Name = name;
             Value = value;
         }
     }
@@ -72,6 +106,16 @@ namespace LiteContainer.Test
         }
 
         public TestProperty(int value)
+        {
+            Value = value;
+        }
+    }
+
+    public class TestPropertyNoDefaultConstructor : ITestProperty
+    {
+        public int Value { get; private set; }
+
+        public TestPropertyNoDefaultConstructor(int value)
         {
             Value = value;
         }

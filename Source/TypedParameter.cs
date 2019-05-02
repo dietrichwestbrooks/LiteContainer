@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     public class TypedParameter<TValue> : ResolveParameter
     {

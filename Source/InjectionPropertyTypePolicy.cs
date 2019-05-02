@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     internal class InjectionPropertyTypePolicy : IInjectionPolicy
     {

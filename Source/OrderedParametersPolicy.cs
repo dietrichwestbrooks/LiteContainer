@@ -1,4 +1,4 @@
-﻿namespace Wayne.Payment.Platform.Lite
+﻿namespace LiteContainer
 {
     public class OrderedParametersPolicy : IResolveParameterPolicy
     {

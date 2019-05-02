@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     internal class ResolveBuildPlanPolicy : IBuildPlanPolicy
     {

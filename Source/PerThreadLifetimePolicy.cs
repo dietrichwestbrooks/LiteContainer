@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     public sealed class PerThreadLifetimePolicy : ILifetimePolicy
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     internal interface IBuildTypePolicy : IBuilderPolicy
     {

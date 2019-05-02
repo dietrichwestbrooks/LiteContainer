@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     internal static class PolicyListExtensions
     {

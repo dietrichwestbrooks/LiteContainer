@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Practices.ServiceLocation;
+using CommonServiceLocator;
 
-namespace Wayne.Payment.Platform.Lite
+namespace LiteContainer
 {
     public sealed class LiteContainer : ILiteContainer
     {
