@@ -1,76 +1,53 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wayne.Payment.Platform.Lite;
+﻿
 
 // ReSharper disable ConvertToConstant.Local
-namespace LiteContainer.Test
+namespace LiteContainer
 {
+    using System;
+    using Xunit;
+
     /// <summary>
     /// Summary description for BuildUpTest
     /// </summary>
-    [TestClass]
-    public class BuildUpTest
+    public class BuildUpTest : IDisposable
     {
-        private ILiteContainer _container;
+        private readonly ILiteContainer _container;
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext { get; set; }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        [TestInitialize]
-        public void TestInitialize()
+        public BuildUpTest()
         {
-            _container = new Wayne.Payment.Platform.Lite.LiteContainer();
+            _container = new LiteContainer();
         }
 
-        // Use TestCleanup to run code after each test has run
-        [TestCleanup]
-        public void TestCleanup()
+        // Use Dispose to run code after each test has run
+        public void Dispose()
         {
             _container.Dispose();
         }
-        #endregion
 
-        [TestMethod]
+        [Fact]
         public void buildup_unregistered_unnamed_service_type()
         {
             var unregisteredType = typeof(ITestService);
 
             var externalInstance = new TestService();
 
-            _container.BuildUp(unregisteredType, externalInstance);
+            _container.BuildUp(externalInstance);
 
-            Assert.IsNull(externalInstance.Parameter);
+            Assert.Null(externalInstance.Parameter);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [Fact]
         public void buildup_unnamed_service_type_with_unassignable_interface()
         {
             var unasignableType = typeof(ITestProperty);
 
             var externalInstance = new TestService();
 
-            _container.BuildUp(unasignableType, externalInstance);
+        Assert.Throws<ArgumentException>(() =>
+            _container.BuildUp(externalInstance));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void buildup_null_unnamed_service_type()
         {
             var nullServiceType = (Type)null;
@@ -78,11 +55,12 @@ namespace LiteContainer.Test
             var externalInstance = new TestService();
 
 // ReSharper disable ExpressionIsAlwaysNull
-            _container.BuildUp(nullServiceType, externalInstance);
+        Assert.Throws<ArgumentNullException>(() =>
+            _container.BuildUp(externalInstance));
 // ReSharper restore ExpressionIsAlwaysNull
         }
 
-        [TestMethod]
+        [Fact]
         public void inject_property_by_name_for_externally_created_instance_for_unnamed_service_type()
         {
             var expectedType = typeof(ITestService);
@@ -100,14 +78,14 @@ namespace LiteContainer.Test
 
             var externalInstance = new TestService();
 
-            _container.BuildUp(expectedType, externalInstance);
+            _container.BuildUp(externalInstance);
 
             var actualParamValue = externalInstance.Parameter.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void inject_property_by_name_for_externally_created_instance_for_unnamed_service_type_using_generic()
         {
             var expectedType = typeof(ITestService);
@@ -125,14 +103,14 @@ namespace LiteContainer.Test
 
             var externalInstance = new TestService();
 
-            _container.BuildUp<ITestService>(externalInstance);
+            _container.BuildUp(externalInstance);
 
             var actualParamValue = externalInstance.Parameter.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void inject_property_by_type_for_externally_created_instance_for_unnamed_service_type()
         {
             var expectedType = typeof(ITestService);
@@ -149,15 +127,14 @@ namespace LiteContainer.Test
 
             var externalInstance = new TestService();
 
-            _container.BuildUp(expectedType, externalInstance);
+            _container.BuildUp(externalInstance);
 
             var actualParamValue = externalInstance.Parameter.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void buildup_null_named_service_type()
         {
             var expectedName = (string) null;
@@ -170,14 +147,14 @@ namespace LiteContainer.Test
             var externalInstance = new TestService();
 
 // ReSharper disable ExpressionIsAlwaysNull
-            _container.BuildUp(registeredType, externalInstance, expectedName);
+        Assert.Throws<ArgumentNullException>(() =>
+            _container.BuildUp(externalInstance, expectedName));
 // ReSharper restore ExpressionIsAlwaysNull
 
-            Assert.IsNull(externalInstance.Parameter);
+            Assert.Null(externalInstance.Parameter);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void buildup_null_named_service_type_using_generic()
         {
             var expectedName = (string)null;
@@ -190,13 +167,14 @@ namespace LiteContainer.Test
             var externalInstance = new TestService();
 
             // ReSharper disable ExpressionIsAlwaysNull
-            _container.BuildUp<ITestService>(externalInstance, expectedName);
+        Assert.Throws<ArgumentNullException>(() =>
+            _container.BuildUp(externalInstance, expectedName));
             // ReSharper restore ExpressionIsAlwaysNull
 
-            Assert.IsNull(externalInstance.Parameter);
+            Assert.Null(externalInstance.Parameter);
         }
 
-        [TestMethod]
+        [Fact]
         public void buildup_unregistered_named_service_type()
         {
             var expectedName = "test";
@@ -204,13 +182,12 @@ namespace LiteContainer.Test
 
             var externalInstance = new TestService();
 
-            _container.BuildUp(unregisteredType, externalInstance, expectedName);
+            _container.BuildUp(externalInstance, expectedName);
 
-            Assert.IsNull(externalInstance.Parameter);
+            Assert.Null(externalInstance.Parameter);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [Fact]
         public void buildup_named_service_type_with_unassignable_interface()
         {
             var expectedName = "test";
@@ -218,11 +195,11 @@ namespace LiteContainer.Test
 
             var externalInstance = new TestService();
 
-            _container.BuildUp(unasignableType, externalInstance, expectedName);
+        Assert.Throws<ArgumentException>(() =>
+            _container.BuildUp(externalInstance, expectedName));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void buildup_named_null_service_type()
         {
             var expectedName = "test";
@@ -231,11 +208,12 @@ namespace LiteContainer.Test
             var externalInstance = new TestService();
 
 // ReSharper disable ExpressionIsAlwaysNull
-            _container.BuildUp(nullServiceType, externalInstance, expectedName);
+        Assert.Throws<ArgumentNullException>(() =>
+            _container.BuildUp(externalInstance, expectedName));
 // ReSharper restore ExpressionIsAlwaysNull
         }
 
-        [TestMethod]
+        [Fact]
         public void inject_property_by_name_for_externally_created_instance_for_named_service_type()
         {
             var expectedName = "test";
@@ -254,14 +232,14 @@ namespace LiteContainer.Test
 
             var externalInstance = new TestService();
 
-            _container.BuildUp(expectedType, externalInstance, expectedName);
+            _container.BuildUp(externalInstance, expectedName);
 
             var actualParamValue = externalInstance.Parameter.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void inject_property_by_name_for_externally_created_instance_for_named_service_type_using_generic()
         {
             var expectedName = "test";
@@ -280,14 +258,14 @@ namespace LiteContainer.Test
 
             var externalInstance = new TestService();
 
-            _container.BuildUp<ITestService>(externalInstance, expectedName);
+            _container.BuildUp(externalInstance, expectedName);
 
             var actualParamValue = externalInstance.Parameter.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void inject_property_by_type_for_externally_created_instance_for_named_service_type()
         {
             var expectedName = "test";
@@ -305,11 +283,11 @@ namespace LiteContainer.Test
 
             var externalInstance = new TestService();
 
-            _container.BuildUp(expectedType, externalInstance, expectedName);
+            _container.BuildUp(externalInstance, expectedName);
 
             var actualParamValue = externalInstance.Parameter.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
     }
 }

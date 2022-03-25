@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace LiteContainer.Test
+﻿namespace LiteContainer
 {
+    using System;
+
     public interface ITestService
     {
         int Value { get; }

@@ -1,55 +1,33 @@
-﻿using System;
-using System.Linq;
-using Microsoft.Practices.ServiceLocation;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wayne.Payment.Platform.Lite;
+﻿
 
 // ReSharper disable ConvertToConstant.Local
-namespace LiteContainer.Test
+namespace LiteContainer
 {
+    using System;
+    using System.Linq;
+    using CommonServiceLocator;
+    using Xunit;
+
     /// <summary>
     /// Summary description for InstanceTest
     /// </summary>
-    [TestClass]
-    public class RegisterInstanceTest
+    public class RegisterInstanceTest : IDisposable
     {
-        private ILiteContainer _container;
+        private readonly ILiteContainer _container;
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext { get; set; }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void TestClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void TestClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        [TestInitialize]
-        public void TestInitialize()
+        public RegisterInstanceTest()
         {
-            _container = new Wayne.Payment.Platform.Lite.LiteContainer();
+            _container = new LiteContainer();
         }
 
-        // Use TestCleanup to run code after each test has run
-        [TestCleanup]
-        public void TestCleanup()
+        // Use Dispose to run code after each test has run
+        public void Dispose()
         {
             _container.Dispose();
         }
-        #endregion
 
 
-        [TestMethod]
+        [Fact]
         public void verify_unnamed_registered_instance()
         {
             var expectedType = typeof(TestService);
@@ -61,14 +39,14 @@ namespace LiteContainer.Test
 
             var actualRegCount = _container.Registrations.Count();
 
-            Assert.AreEqual(expectedRegCount, actualRegCount);
+            Assert.Equal(expectedRegCount, actualRegCount);
 
             var actualType = _container.Registrations.First(r => r.ServiceType == expectedType).ServiceType;
 
-            Assert.AreEqual(expectedType, actualType);
+            Assert.Equal(expectedType, actualType);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_unnamed_registered_interface()
         {
             var expectedType = typeof(ITestService);
@@ -81,14 +59,14 @@ namespace LiteContainer.Test
 
             var actualRegCount = registration.Registrations.Count();
 
-            Assert.AreEqual(expectedRegCount, actualRegCount);
+            Assert.Equal(expectedRegCount, actualRegCount);
 
             var actualType = registration.Registrations[expectedType].ServiceType;
 
-            Assert.AreEqual(expectedType, actualType);
+            Assert.Equal(expectedType, actualType);
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_unnamed_instance()
         {
             var expectedParamValue = 100;
@@ -99,14 +77,14 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve<TestParameter>();
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
 
             var actualParamValue = actualInstance.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_unnamed_instance_for_interface()
         {
             var expectedParamValue = 100;
@@ -118,14 +96,14 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve<ITestParameter>();
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
 
             var actualParamValue = actualInstance.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_unnamed_instance_for_multiple_interfaces()
         {
             var expectedParamValue = 100;
@@ -139,33 +117,33 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve<ITestParameterValue>();
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
 
             var actualParamValue = actualInstance.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
 
             var actualInstance2 = _container.Resolve<ITestParameterName>();
 
-            Assert.AreSame(expectedInstance, actualInstance2);
+            Assert.Same(expectedInstance, actualInstance2);
 
             var actualParamName = actualInstance2.Name;
 
-            Assert.AreEqual(expectedParamName, actualParamName);
+            Assert.Equal(expectedParamName, actualParamName);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ActivationException))]
+        [Fact]
         public void resolve_unnamed_instance_for_unregistered_interface()
         {
             var expectedInstance = new TestParameter();
 
             _container.Register(expectedInstance);
 
-            _container.Resolve<ITestParameter>();
+        Assert.Throws<ActivationException>(() =>
+            _container.Resolve<ITestParameter>());
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_unnamed_instance_overwrite_registered_type()
         {
             Type registeredType = typeof(ITestProperty);
@@ -179,21 +157,21 @@ namespace LiteContainer.Test
 
             var overwrittenInstance = _container.Resolve(registeredType, new NamedParameter<int>("value", 1));
 
-            Assert.IsNotNull(overwrittenInstance);
+            Assert.NotNull(overwrittenInstance);
 
-            Assert.IsInstanceOfType(overwrittenInstance, overwrittenType);
+            Assert.IsType<TestPropertyNoDefaultConstructor>(overwrittenInstance);
 
             _container.Register(expectedInstance)
                 .As(registeredType);
 
             var actualInstance = _container.Resolve(registeredType);
 
-            Assert.IsNotNull(actualInstance);
+            Assert.NotNull(actualInstance);
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_unnamed_instance_overwrite_registered_instance()
         {
             Type registeredType = typeof(ITestProperty);
@@ -206,22 +184,21 @@ namespace LiteContainer.Test
 
             var overwrittenInstance = _container.Resolve(registeredType);
 
-            Assert.IsNotNull(overwrittenInstance);
+            Assert.NotNull(overwrittenInstance);
 
-            Assert.IsInstanceOfType(overwrittenInstance, overwrittenType);
+            Assert.IsType<TestPropertyNoDefaultConstructor>(overwrittenInstance);
 
             _container.Register(expectedInstance)
                 .As(registeredType);
 
             var actualInstance = _container.Resolve(registeredType);
 
-            Assert.IsNotNull(actualInstance);
+            Assert.NotNull(actualInstance);
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ActivationException))]
+        [Fact]
         public void resolve_named_instance_when_incorrect_name()
         {
             var expectedName = "test";
@@ -231,21 +208,22 @@ namespace LiteContainer.Test
 
             _container.Register(expectedInstance, expectedName);
 
-            _container.Resolve<TestParameter>(badName);
+            Assert.Throws<ActivationException>(() =>
+            _container.Resolve<TestParameter>(badName));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void register_unnamed_instance_null_service()
         {
             var expectedInstance = (TestProperty)null;
 
             // ReSharper disable ExpressionIsAlwaysNull
-            _container.Register(expectedInstance);
+        Assert.Throws<ArgumentNullException>(() =>
+            _container.Register(expectedInstance));
             // ReSharper restore ExpressionIsAlwaysNull
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_named_instance()
         {
             var expectedName = "test";
@@ -257,14 +235,14 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve<TestParameter>(expectedName);
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
 
             var actualParamValue = actualInstance.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_named_instance_for_interface()
         {
             var expectedName = "test";
@@ -277,14 +255,14 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve<ITestParameter>(expectedName);
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
 
             var actualParamValue = actualInstance.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_named_instance_for_multiple_interfaces()
         {
             var expectedName = "test";
@@ -299,23 +277,22 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve<ITestParameterValue>(expectedName);
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
 
             var actualParamValue = actualInstance.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
 
             var resolvedInstance2 = _container.Resolve<ITestParameterName>(expectedName);
 
-            Assert.IsTrue(expectedInstance == resolvedInstance2);
+            Assert.True(expectedInstance == resolvedInstance2);
 
             var actualParamName = resolvedInstance2.Name;
 
-            Assert.AreEqual(expectedParamName, actualParamName);
+            Assert.Equal(expectedParamName, actualParamName);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ActivationException))]
+        [Fact]
         public void resolve_named_instance_for_unregistered_interface()
         {
             var expectedName = "test";
@@ -324,10 +301,11 @@ namespace LiteContainer.Test
 
             _container.Register(expectedInstance, expectedName);
 
-            _container.Resolve<ITestParameter>();
+        Assert.Throws<ActivationException>(() =>
+            _container.Resolve<ITestParameter>());
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_named_instance_overwrite_registered_type()
         {
             var expectedName = "test";
@@ -343,21 +321,21 @@ namespace LiteContainer.Test
             var overwrittenInstance = _container.Resolve(registeredType, expectedName,
                 new NamedParameter<int>("value", 1));
 
-            Assert.IsNotNull(overwrittenInstance);
+            Assert.NotNull(overwrittenInstance);
 
-            Assert.IsInstanceOfType(overwrittenInstance, overwrittenType);
+            Assert.IsType<TestPropertyNoDefaultConstructor>(overwrittenInstance);
 
             _container.Register(expectedInstance, expectedName)
                 .As(registeredType);
 
             var actualInstance = _container.Resolve(registeredType, expectedName);
 
-            Assert.IsNotNull(actualInstance);
+            Assert.NotNull(actualInstance);
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_named_instance_overwrite_registered_instance()
         {
             var expectedName = "test";
@@ -371,45 +349,45 @@ namespace LiteContainer.Test
 
             var overwrittenInstance = _container.Resolve(registeredType, expectedName);
 
-            Assert.IsNotNull(overwrittenInstance);
+            Assert.NotNull(overwrittenInstance);
 
-            Assert.IsInstanceOfType(overwrittenInstance, overwrittenType);
+            Assert.IsType<TestPropertyNoDefaultConstructor>(overwrittenInstance);
 
             _container.Register(expectedInstance, expectedName)
                 .As(registeredType);
 
             var actualInstance = _container.Resolve(registeredType, expectedName);
 
-            Assert.IsNotNull(actualInstance);
+            Assert.NotNull(actualInstance);
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void register_named_instance_null_name()
         {
             var expectedName = (string)null;
             var expectedInstance = new TestProperty();
 
             // ReSharper disable ExpressionIsAlwaysNull
-            _container.Register(expectedInstance, expectedName);
+        Assert.Throws<ArgumentNullException>(() =>
+            _container.Register(expectedInstance, expectedName));
             // ReSharper restore ExpressionIsAlwaysNull
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void register_named_instance_null_service()
         {
             var expectedName = "test";
             var expectedInstance = (TestProperty)null;
 
             // ReSharper disable ExpressionIsAlwaysNull
-            _container.Register(expectedInstance, expectedName);
+        Assert.Throws<ArgumentNullException>(() =>
+            _container.Register(expectedInstance, expectedName));
             // ReSharper restore ExpressionIsAlwaysNull
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_all_named_instances()
         {
             var expectedName = "test";
@@ -431,28 +409,28 @@ namespace LiteContainer.Test
 
             _container.Register(unamedInstance);
 
-            Assert.AreEqual(expectedRegCount, _container.Registrations.Count());
+            Assert.Equal(expectedRegCount, _container.Registrations.Count());
 
             var actualInstances = _container.ResolveAll(expectedType).Cast<TestProperty>().ToArray();
 
-            Assert.IsNotNull(actualInstances);
+            Assert.NotNull(actualInstances);
 
-            Assert.AreEqual(expectedResolveCount, actualInstances.Count());
+            Assert.Equal(expectedResolveCount, actualInstances.Count());
 
             var actualInstance = actualInstances.FirstOrDefault(p => p.Value == expectedValue);
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
 
             var actualInstance2 = actualInstances.FirstOrDefault(p => p.Value == expectedValue2);
 
-            Assert.AreSame(expectedInstance2, actualInstance2);
+            Assert.Same(expectedInstance2, actualInstance2);
 
             var actualInstance3 = actualInstances.FirstOrDefault(p => p.Value == expectedValue3);
 
-            Assert.IsNull(actualInstance3);
+            Assert.Null(actualInstance3);
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_all_named_instances_generic()
         {
             var expectedName = "test";
@@ -473,28 +451,28 @@ namespace LiteContainer.Test
 
             _container.Register(unamedInstance);
 
-            Assert.AreEqual(expectedRegCount, _container.Registrations.Count());
+            Assert.Equal(expectedRegCount, _container.Registrations.Count());
 
             var actualInstances = _container.ResolveAll<TestProperty>().ToArray();
 
-            Assert.IsNotNull(actualInstances);
+            Assert.NotNull(actualInstances);
 
-            Assert.AreEqual(expectedResolveCount, actualInstances.Count());
+            Assert.Equal(expectedResolveCount, actualInstances.Count());
 
             var actualInstance = actualInstances.FirstOrDefault(p => p.Value == expectedValue);
 
-            Assert.AreSame(expectedInstance, actualInstance);
+            Assert.Same(expectedInstance, actualInstance);
 
             var actualInstance2 = actualInstances.FirstOrDefault(p => p.Value == expectedValue2);
 
-            Assert.AreSame(expectedInstance2, actualInstance2);
+            Assert.Same(expectedInstance2, actualInstance2);
 
             var actualInstance3 = actualInstances.FirstOrDefault(p => p.Value == expectedValue3);
 
-            Assert.IsNull(actualInstance3);
+            Assert.Null(actualInstance3);
         }
 
-        [TestMethod]
+        [Fact]
         public void resolve_all_named_instances_and_types()
         {
             var expectedName = "test";
@@ -514,37 +492,37 @@ namespace LiteContainer.Test
 
             _container.Register(expectedType);
 
-            Assert.AreEqual(expectedRegCount, _container.Registrations.Count());
+            Assert.Equal(expectedRegCount, _container.Registrations.Count());
 
             var actualInstances = _container.ResolveAll(expectedType).Cast<TestProperty>().ToArray();
 
-            Assert.IsNotNull(actualInstances);
+            Assert.NotNull(actualInstances);
 
-            Assert.AreEqual(expectedResolveCount, actualInstances.Count());
+            Assert.Equal(expectedResolveCount, actualInstances.Count());
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void resolve_all_null_service_type()
         {
             var expectedType = (Type)null;
 
 // ReSharper disable ExpressionIsAlwaysNull
-            _container.ResolveAll(expectedType);
+        Assert.Throws<ArgumentNullException>(() =>
+            _container.ResolveAll(expectedType));
 // ReSharper restore ExpressionIsAlwaysNull
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [Fact]
         public void register_instance_for_incompatible_interface()
         {
             var expectedInstance = new TestService();
 
+        Assert.Throws<ArgumentException>(() =>
             _container.Register(expectedInstance)
-                .As<ITestProperty>();
+                .As<ITestProperty>());
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_named_registered_instance()
         {
             var expectedName = "test";
@@ -557,18 +535,18 @@ namespace LiteContainer.Test
 
             var actualRegCount = _container.Registrations.Count();
 
-            Assert.AreEqual(expectedRegCount, actualRegCount);
+            Assert.Equal(expectedRegCount, actualRegCount);
 
             var actualType = _container.Registrations.First(r => r.ServiceType == expectedType).ServiceType;
 
-            Assert.AreEqual(expectedType, actualType);
+            Assert.Equal(expectedType, actualType);
 
             var actualName = _container.Registrations.First(r => r.ServiceType == expectedType).Name;
 
-            Assert.AreEqual(expectedName, actualName);
+            Assert.Equal(expectedName, actualName);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_named_registered_interface()
         {
             var expectedName = "test";
@@ -582,15 +560,15 @@ namespace LiteContainer.Test
 
             var actualRegCount = registration.Registrations.Count();
 
-            Assert.AreEqual(expectedRegCount, actualRegCount);
+            Assert.Equal(expectedRegCount, actualRegCount);
 
             var actualType = registration.Registrations[expectedType].ServiceType;
 
-            Assert.AreEqual(expectedType, actualType);
+            Assert.Equal(expectedType, actualType);
 
             var actualName = registration.Registrations[expectedType].Name;
 
-            Assert.AreEqual(expectedName, actualName);
+            Assert.Equal(expectedName, actualName);
         }
     }
 }

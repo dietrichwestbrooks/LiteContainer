@@ -1,74 +1,53 @@
-﻿using System;
-using System.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wayne.Payment.Platform.Lite;
+﻿
 
 // ReSharper disable ConvertToConstant.Local
-namespace LiteContainer.Test
+namespace LiteContainer
 {
+    using System;
+    using System.Threading;
+    using Xunit;
+    using Xunit.Sdk;
+
     /// <summary>
     /// Summary description for LifetimeTest
     /// </summary>
-    [TestClass]
-    public class LifetimeTest
+    public class LifetimeTest : IDisposable
     {
-        private ILiteContainer _container;
+        private readonly ILiteContainer _container;
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext { get; set; }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        [TestInitialize]
-        public void TestInitialize()
+        public LifetimeTest()
         {
-            _container = new Wayne.Payment.Platform.Lite.LiteContainer();
+            _container = new LiteContainer();
         }
 
-        // Use TestCleanup to run code after each test has run
-        [TestCleanup]
-        public void TestCleanup()
+        // Use Dispose to run code after each test has run
+        public void Dispose()
         {
             _container.Dispose();
         }
-        #endregion
 
-        [TestMethod]
+        [Fact]
         public void verify_per_resolve_lifetime_for_registered_type()
         {
             var expectedType = typeof(TestService);
 
             _container.Register(expectedType)
-                .PerResolve();
+                .PerThread();
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<TestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<TestService>(actualInstance2);
 
-            Assert.AreNotSame(actualInstance, actualInstance2);
+            Assert.NotSame(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_per_resolve_lifetime_is_default_for_registered_type()
         {
             var expectedType = typeof(TestService);
@@ -77,40 +56,40 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<TestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<TestService>(actualInstance2);
 
-            Assert.AreNotSame(actualInstance, actualInstance2);
+            Assert.NotSame(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_per_resolve_lifetime_for_factory_registered_type()
         {
             var expectedType = typeof(ITestService);
             var factory = new Func<ITestService>(() => new TestService());
 
             var registration = _container.Register(factory);
-            registration.Registrations[expectedType].PerResolve();
+            registration.Registrations[expectedType].PerThread();
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<ITestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
-            Assert.AreNotSame(actualInstance, actualInstance2);
+            Assert.NotSame(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_singleton_lifetime_for_registered_type()
         {
             var expectedType = typeof(TestService);
@@ -120,18 +99,18 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<TestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<TestService>(actualInstance2);
 
-            Assert.AreSame(actualInstance, actualInstance2);
+            Assert.Same(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_singleton_lifetime_for_factory_registered_type()
         {
             var expectedType = typeof(ITestService);
@@ -142,18 +121,18 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<ITestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
-            Assert.AreSame(actualInstance, actualInstance2);
+            Assert.Same(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_singleton_lifetime_for_registered_instance()
         {
             var expectedType = typeof(TestService);
@@ -165,18 +144,18 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<TestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<TestService>(actualInstance2);
 
-            Assert.AreSame(actualInstance, actualInstance2);
+            Assert.Same(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_singleton_lifetime_is_default_for_registered_instance()
         {
             var expectedType = typeof(TestService);
@@ -187,18 +166,18 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<TestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<TestService>(actualInstance2);
 
-            Assert.AreSame(actualInstance, actualInstance2);
+            Assert.Same(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_external_lifetime_for_registered_instance()
         {
             var expectedType = typeof(TestService);
@@ -210,18 +189,18 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<ITestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
-            Assert.AreSame(actualInstance, actualInstance2);
+            Assert.Same(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_external_lifetime_for_registered_type()
         {
             var expectedType = typeof(TestService);
@@ -231,18 +210,18 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<ITestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
-            Assert.AreSame(actualInstance, actualInstance2);
+            Assert.Same(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_external_lifetime_for_factory_registered_type()
         {
             var expectedType = typeof(ITestService);
@@ -253,18 +232,18 @@ namespace LiteContainer.Test
 
             var actualInstance = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<ITestService>(actualInstance);
 
             var actualInstance2 = _container.Resolve(expectedType);
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
-            Assert.AreSame(actualInstance, actualInstance2);
+            Assert.Same(actualInstance, actualInstance2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_external_lifetime_for_registered_type_when_disposed()
         {
             var expectedType = typeof(ITestService);
@@ -281,14 +260,14 @@ namespace LiteContainer.Test
                 var actualInstance =
                     _container.Resolve<TestService>(new NamedParameter<int>("value", expectedValue1)) as ITestService;
 
-                Assert.IsNotNull(actualInstance);
-                Assert.IsInstanceOfType(actualInstance, expectedType);
+                Assert.NotNull(actualInstance);
+                Assert.IsType<ITestService>(actualInstance);
 
 // ReSharper disable PossibleNullReferenceException
                 var actualValue1 = actualInstance.Value;
 // ReSharper restore PossibleNullReferenceException
 
-                Assert.AreEqual(expectedValue1, actualValue1);
+                Assert.Equal(expectedValue1, actualValue1);
 
                 return new WeakReference(actualInstance);
             });
@@ -298,23 +277,23 @@ namespace LiteContainer.Test
             GC.Collect(0, GCCollectionMode.Forced);
             GC.WaitForFullGCComplete();
 
-            Assert.IsFalse(reference.IsAlive, "Instance reference should have been garbage collected");
+            Assert.False(reference.IsAlive, "Instance reference should have been garbage collected");
 
             // NamedParameter should be used because instance needs to be created
             var actualInstance2 = _container.Resolve<TestService>(
                 new NamedParameter<int>("value", expectedValue2)) as ITestService;
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
 // ReSharper disable PossibleNullReferenceException
             var actualValue2 = actualInstance2.Value;
 // ReSharper restore PossibleNullReferenceException
 
-            Assert.AreEqual(expectedValue2, actualValue2);
+            Assert.Equal(expectedValue2, actualValue2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_external_lifetime_for_factory_registered_type_when_disposed()
         {
             var expectedType = typeof(ITestService);
@@ -332,14 +311,14 @@ namespace LiteContainer.Test
                 var actualInstance = _container.Resolve(expectedType, 
                     new NamedParameter<int>("value", expectedValue1)) as ITestService;
 
-                Assert.IsNotNull(actualInstance);
-                Assert.IsInstanceOfType(actualInstance, expectedType);
+                Assert.NotNull(actualInstance);
+                Assert.IsType<ITestService>(actualInstance);
 
 // ReSharper disable PossibleNullReferenceException
                 var actualValue1 = actualInstance.Value;
 // ReSharper restore PossibleNullReferenceException
 
-                Assert.AreEqual(expectedValue1, actualValue1);
+                Assert.Equal(expectedValue1, actualValue1);
 
                 return new WeakReference(actualInstance);
             });
@@ -349,23 +328,23 @@ namespace LiteContainer.Test
             GC.Collect(0, GCCollectionMode.Forced);
             GC.WaitForFullGCComplete();
 
-            Assert.IsFalse(reference.IsAlive, "Instance reference should have been garbage collected");
+            Assert.False(reference.IsAlive, "Instance reference should have been garbage collected");
 
             // NamedParameter should be used because instance needs to be created
             var actualInstance2 = _container.Resolve(expectedType,
                 new NamedParameter<int>("value", expectedValue2)) as ITestService;
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
 // ReSharper disable PossibleNullReferenceException
             var actualValue2 = actualInstance2.Value;
 // ReSharper restore PossibleNullReferenceException
 
-            Assert.AreEqual(expectedValue2, actualValue2);
+            Assert.Equal(expectedValue2, actualValue2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_per_thread_lifetime_for_registered_type_in_same_thread()
         {
             var expectedType = typeof(ITestService);
@@ -380,30 +359,30 @@ namespace LiteContainer.Test
             var actualInstance =
                 _container.Resolve<TestService>(new NamedParameter<int>("value", expectedValue1)) as ITestService;
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<ITestService>(actualInstance);
 
             // ReSharper disable PossibleNullReferenceException
             var actualValue1 = actualInstance.Value;
             // ReSharper restore PossibleNullReferenceException
 
-            Assert.AreEqual(expectedValue1, actualValue1);
+            Assert.Equal(expectedValue1, actualValue1);
 
             // NamedParameter will be ignored cause no instance needs to be created in same thread
             var actualInstance2 = _container.Resolve<TestService>(
                         new NamedParameter<int>("value", 300)) as ITestService;
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
-            Assert.AreSame(actualInstance, actualInstance2);
+            Assert.Same(actualInstance, actualInstance2);
 
             var actualValue2 = actualInstance2.Value;
 
-            Assert.AreEqual(expectedValue2, actualValue2);
+            Assert.Equal(expectedValue2, actualValue2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_per_thread_lifetime_for_factory_registered_type_in_same_thread()
         {
             var expectedType = typeof(ITestService);
@@ -419,32 +398,32 @@ namespace LiteContainer.Test
             var actualInstance =
                 _container.Resolve(expectedType, new NamedParameter<int>("value", expectedValue1)) as ITestService;
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<ITestService>(actualInstance);
 
 // ReSharper disable PossibleNullReferenceException
             var actualValue1 = actualInstance.Value;
 // ReSharper restore PossibleNullReferenceException
 
-            Assert.AreEqual(expectedValue1, actualValue1);
+            Assert.Equal(expectedValue1, actualValue1);
 
             // NamedParameter will be ignored cause no instance needs to be created in same thread
             var actualInstance2 = _container.Resolve(expectedType,
                         new NamedParameter<int>("value", 300)) as ITestService;
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
-            Assert.AreSame(actualInstance, actualInstance2);
+            Assert.Same(actualInstance, actualInstance2);
 
 // ReSharper disable PossibleNullReferenceException
             var actualValue2 = actualInstance2.Value;
 // ReSharper restore PossibleNullReferenceException
 
-            Assert.AreEqual(expectedValue2, actualValue2);
+            Assert.Equal(expectedValue2, actualValue2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_per_thread_lifetime_for_registered_type_in_different_thread()
         {
             var expectedType = typeof (ITestService);
@@ -459,14 +438,14 @@ namespace LiteContainer.Test
             var actualInstance =
                 _container.Resolve<TestService>(new NamedParameter<int>("value", expectedValue1)) as ITestService;
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<ITestService>(actualInstance);
 
 // ReSharper disable PossibleNullReferenceException
             var actualValue1 = actualInstance.Value;
 // ReSharper restore PossibleNullReferenceException
 
-            Assert.AreEqual(expectedValue1, actualValue1);
+            Assert.Equal(expectedValue1, actualValue1);
 
             ITestService actualInstance2 = null;
 
@@ -486,19 +465,19 @@ namespace LiteContainer.Test
             t.Start();
 
             if (!t.Join(1000))
-                Assert.Fail("Timeout wating for thread");
+                throw new XunitException("Timeout wating for thread");
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
-            Assert.AreNotSame(actualInstance, actualInstance2);
+            Assert.NotSame(actualInstance, actualInstance2);
 
             var actualValue2 = actualInstance2.Value;
 
-            Assert.AreEqual(expectedValue2, actualValue2);
+            Assert.Equal(expectedValue2, actualValue2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_per_thread_lifetime_for_factory_registered_type_in_different_thread()
         {
             var expectedType = typeof(ITestService);
@@ -514,14 +493,14 @@ namespace LiteContainer.Test
             var actualInstance =
                 _container.Resolve(expectedType, new NamedParameter<int>("value", expectedValue1)) as ITestService;
 
-            Assert.IsNotNull(actualInstance);
-            Assert.IsInstanceOfType(actualInstance, expectedType);
+            Assert.NotNull(actualInstance);
+            Assert.IsType<ITestService>(actualInstance);
 
 // ReSharper disable PossibleNullReferenceException
             var actualValue1 = actualInstance.Value;
 // ReSharper restore PossibleNullReferenceException
 
-            Assert.AreEqual(expectedValue1, actualValue1);
+            Assert.Equal(expectedValue1, actualValue1);
 
             ITestService actualInstance2 = null;
 
@@ -541,26 +520,26 @@ namespace LiteContainer.Test
             t.Start();
 
             if (!t.Join(1000))
-                Assert.Fail("Timeout wating for thread");
+                throw new XunitException("Timeout wating for thread");
 
-            Assert.IsNotNull(actualInstance2);
-            Assert.IsInstanceOfType(actualInstance2, expectedType);
+            Assert.NotNull(actualInstance2);
+            Assert.IsType<ITestService>(actualInstance2);
 
-            Assert.AreNotSame(actualInstance, actualInstance2);
+            Assert.NotSame(actualInstance, actualInstance2);
 
             var actualValue2 = actualInstance2.Value;
 
-            Assert.AreEqual(expectedValue2, actualValue2);
+            Assert.Equal(expectedValue2, actualValue2);
         }
 
-        [TestMethod]
+        [Fact]
         public void verify_container_dispose()
         {
             TestService actualInstance = null;
 
             var runIsolated = new Func<WeakReference>(() =>
             {
-                using (var container = new Wayne.Payment.Platform.Lite.LiteContainer())
+                using (var container = new LiteContainer())
                 {
                     container.Register<TestService>()
                         .Singleton();
@@ -576,11 +555,11 @@ namespace LiteContainer.Test
             GC.Collect(0, GCCollectionMode.Forced);
             GC.WaitForPendingFinalizers();
 
-            Assert.IsFalse(reference.IsAlive, "Container should have been garbage collected");
+            Assert.False(reference.IsAlive, "Container should have been garbage collected");
 
-            Assert.IsNotNull(actualInstance);
+            Assert.NotNull(actualInstance);
 
-            Assert.IsTrue(actualInstance.IsDisposed);
+            Assert.True(actualInstance.IsDisposed);
         }
     }
 }

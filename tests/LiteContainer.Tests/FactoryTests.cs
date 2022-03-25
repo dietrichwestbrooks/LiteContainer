@@ -1,81 +1,37 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wayne.Payment.Platform.Lite;
-
-namespace LiteContainer.Test
+﻿namespace LiteContainer
 {
+    using System;
+    using Xunit;
+
     /// <summary>
     /// Summary description for UnitTest1
     /// </summary>
-    [TestClass]
-    public class FactoryTests
+    public class FactoryTests : IDisposable
     {
-        private ILiteContainer _container;
+        private readonly ILiteContainer _container;
 
         public FactoryTests()
         {
-            //
-            // TODO: Add constructor logic here
-            //
-        }
-
-        private TestContext _testContext;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return _testContext;
-            }
-            set
-            {
-                _testContext = value;
-            }
-        }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        [TestInitialize]
-        public void MyTestInitialize()
-        {
-            _container = new Wayne.Payment.Platform.Lite.LiteContainer();
+            _container = new LiteContainer();
         }
         
-        // Use TestCleanup to run code after each test has run
-        [TestCleanup]
-        public void MyTestCleanup()
+        // Use Dispose to run code after each test has run
+        public void Dispose()
         {
             _container.Dispose();
         }
-        
-        #endregion
 
-        [TestMethod]
+        [Fact]
         public void create_with_no_parameters()
         {
             _container.Register(new Func<ITestService>(() => new TestService()));
 
             var service = _container.Resolve<ITestService>();
 
-            Assert.IsNotNull(service, "Service is null");
+            Assert.NotNull(service);
         }
 
-        [TestMethod]
+        [Fact]
         public void create_with_ordered_parameters()
         {
             int expectedParamValue1 = 1;
@@ -96,14 +52,14 @@ namespace LiteContainer.Test
 
             var service = _container.Resolve<ITestService>(new OrderedParameters(expectedParamValue1, expectedParamValue2));
 
-            Assert.AreEqual(expectedParamValue1, actualParamValue1);
+            Assert.Equal(expectedParamValue1, actualParamValue1);
 
-            Assert.AreEqual(expectedParamValue2, actualParamValue2);
+            Assert.Equal(expectedParamValue2, actualParamValue2);
 
-            Assert.IsNotNull(service, "Service is null");
+            Assert.NotNull(service);
         }
 
-        [TestMethod]
+        [Fact]
         public void create_with_named_parameter()
         {
             int expectedNamedValue = 1;
@@ -117,12 +73,12 @@ namespace LiteContainer.Test
 
             var service = _container.Resolve<ITestService>(new NamedParameter<int>("named", expectedNamedValue));
 
-            Assert.AreEqual(expectedNamedValue, actualNamedValue);
+            Assert.Equal(expectedNamedValue, actualNamedValue);
 
-            Assert.IsNotNull(service, "Service is null");
+            Assert.NotNull(service);
         }
 
-        [TestMethod]
+        [Fact]
         public void create_with_typed_value_parameter()
         {
             int expectedTypedValue = 1;
@@ -136,12 +92,12 @@ namespace LiteContainer.Test
 
             var service = _container.Resolve<ITestService>(new TypedParameter<int>(expectedTypedValue));
 
-            Assert.AreEqual(expectedTypedValue, actualTypedValue);
+            Assert.Equal(expectedTypedValue, actualTypedValue);
 
-            Assert.IsNotNull(service, "Service is null");
+            Assert.NotNull(service);
         }
 
-        [TestMethod]
+        [Fact]
         public void create_with_named_and_typed_parameter()
         {
             int expectedNamedValue = 1;
@@ -159,14 +115,14 @@ namespace LiteContainer.Test
             var service = _container.Resolve<ITestService>(new NamedParameter<int>("named", expectedNamedValue),
                 new TypedParameter<int>(1));
 
-            Assert.AreEqual(expectedNamedValue, actualNamedValue);
+            Assert.Equal(expectedNamedValue, actualNamedValue);
 
-            Assert.AreEqual(expectedTypedValue, actualTypedValue);
+            Assert.Equal(expectedTypedValue, actualTypedValue);
 
-            Assert.IsNotNull(service, "Service is null");
+            Assert.NotNull(service);
         }
 
-        [TestMethod]
+        [Fact]
         public void create_with_typed_obj_parameter()
         {
             int expectedParamValue = 1;
@@ -182,9 +138,9 @@ namespace LiteContainer.Test
 
             actualParamValue = service.Parameter.Value;
 
-            Assert.AreEqual(expectedParamValue, actualParamValue);
+            Assert.Equal(expectedParamValue, actualParamValue);
 
-            Assert.IsNotNull(service, "Service is null");
+            Assert.NotNull(service);
         }
     }
 }

@@ -1,0 +1,9 @@
+mode: ContinuousDelivery
+
+version: 1.0
+
+branches: {}
+
+ignore:
+  sha: []
+merge-message-formats: {}
